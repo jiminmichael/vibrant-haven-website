@@ -25,7 +25,7 @@ export const Contact = () => {
                   <Phone className="w-5 h-5 text-accent-400 mt-1 mr-4" />
                   <div>
                     <p className="text-white/70 text-sm mb-1">Phone</p>
-                    <p className="text-white font-medium">+234 700 700 7000</p>
+                    <p className="text-white font-medium">+234 903 904 5094</p>
                   </div>
                 </div>
                 
@@ -41,7 +41,7 @@ export const Contact = () => {
                   <MapPin className="w-5 h-5 text-accent-400 mt-1 mr-4" />
                   <div>
                     <p className="text-white/70 text-sm mb-1">Address</p>
-                    <p className="text-white font-medium">10A Admiralty Way, Lekki Phase 1, Lagos</p>
+                    <p className="text-white font-medium">Suit C2, Silver line plaza, Garki 2, Abuja 900103, Federal Capital Territory</p>
                   </div>
                 </div>
                 
