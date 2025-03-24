@@ -10,7 +10,7 @@ export const Contact = () => {
       <div className="section-container">
         <SectionHeading
           title="Get in Touch"
-          subtitle="Have questions about a property or our services? Contact us today and our team will be happy to assist you."
+          subtitle="Have questions about a property or our services? Contact Zain Homes today and our team will be happy to assist you."
           center
           className="text-white"
         />
@@ -25,7 +25,7 @@ export const Contact = () => {
                   <Phone className="w-5 h-5 text-accent-400 mt-1 mr-4" />
                   <div>
                     <p className="text-white/70 text-sm mb-1">Phone</p>
-                    <p className="text-white font-medium">+1 (555) 123-4567</p>
+                    <p className="text-white font-medium">+234 700 700 7000</p>
                   </div>
                 </div>
                 
@@ -33,7 +33,7 @@ export const Contact = () => {
                   <Mail className="w-5 h-5 text-accent-400 mt-1 mr-4" />
                   <div>
                     <p className="text-white/70 text-sm mb-1">Email</p>
-                    <p className="text-white font-medium">info@estateluxury.com</p>
+                    <p className="text-white font-medium">info@zainhomes.com.ng</p>
                   </div>
                 </div>
                 
@@ -41,7 +41,7 @@ export const Contact = () => {
                   <MapPin className="w-5 h-5 text-accent-400 mt-1 mr-4" />
                   <div>
                     <p className="text-white/70 text-sm mb-1">Address</p>
-                    <p className="text-white font-medium">123 Luxury Avenue, Beverly Hills, CA 90210</p>
+                    <p className="text-white font-medium">10A Admiralty Way, Lekki Phase 1, Lagos</p>
                   </div>
                 </div>
                 

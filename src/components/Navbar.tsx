@@ -3,10 +3,12 @@ import React, { useState, useEffect } from "react";
 import { Menu, X, ChevronDown, Phone } from "lucide-react";
 import { Button } from "./ui-components/Button";
 import { cn } from "@/lib/utils";
+import { Link, useLocation } from "react-router-dom";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,12 +31,18 @@ export const Navbar = () => {
   };
 
   const menuItems = [
-    { label: "Home", href: "#" },
-    { label: "Properties", href: "#properties" },
-    { label: "About", href: "#about" },
-    { label: "Services", href: "#services" },
-    { label: "Contact", href: "#contact" },
+    { label: "Home", href: "/" },
+    { label: "Properties", href: "/properties" },
+    { label: "About", href: "/about" },
+    { label: "Services", href: "/services" },
+    { label: "Contact", href: "/contact" },
   ];
+
+  const isActive = (path: string) => {
+    if (path === "/" && location.pathname === "/") return true;
+    if (path !== "/" && location.pathname.startsWith(path)) return true;
+    return false;
+  };
 
   return (
     <header
@@ -48,28 +56,31 @@ export const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
-            <a href="#" className="text-estate-900 font-serif text-2xl font-bold">
-              ESTATE<span className="text-accent-500">.</span>
-            </a>
+            <Link to="/" className="text-estate-900 font-serif text-2xl font-bold">
+              ZAIN<span className="text-accent-500">HOMES</span>
+            </Link>
           </div>
 
           {/* Desktop menu */}
           <nav className="hidden md:flex items-center space-x-8">
             {menuItems.map((item) => (
-              <a
+              <Link
                 key={item.label}
-                href={item.href}
-                className="text-estate-700 hover:text-estate-900 text-sm font-medium link-underline"
+                to={item.href}
+                className={cn(
+                  "text-estate-700 hover:text-estate-900 text-sm font-medium link-underline",
+                  isActive(item.href) && "text-accent-500 font-semibold"
+                )}
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
           <div className="hidden md:flex items-center">
             <div className="mr-6 flex items-center text-estate-700">
               <Phone size={16} className="mr-2 text-accent-500" />
-              <span className="text-sm font-medium">+1 (555) 123-4567</span>
+              <span className="text-sm font-medium">+234 700 700 7000</span>
             </div>
             <Button>Schedule a Viewing</Button>
           </div>
@@ -100,19 +111,22 @@ export const Navbar = () => {
       >
         <div className="p-4 space-y-2 divide-y divide-estate-100">
           {menuItems.map((item) => (
-            <a
+            <Link
               key={item.label}
-              href={item.href}
-              className="block py-3 text-base font-medium text-estate-700 hover:text-estate-900"
+              to={item.href}
+              className={cn(
+                "block py-3 text-base font-medium text-estate-700 hover:text-estate-900",
+                isActive(item.href) && "text-accent-500 font-semibold"
+              )}
               onClick={() => setIsMenuOpen(false)}
             >
               {item.label}
-            </a>
+            </Link>
           ))}
           <div className="pt-4">
             <div className="flex items-center py-3 text-estate-700">
               <Phone size={16} className="mr-2 text-accent-500" />
-              <span className="text-base font-medium">+1 (555) 123-4567</span>
+              <span className="text-base font-medium">+234 700 700 7000</span>
             </div>
             <Button fullWidth className="mt-3">
               Schedule a Viewing

@@ -9,7 +9,7 @@ export const Hero = () => {
       {/* Background image */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
+          src="https://zainhomes.com.ng/wp-content/uploads/2020/07/home-page-slider-bg-4.jpg"
           alt="Luxury building"
           className="w-full h-full object-cover"
         />
@@ -22,10 +22,10 @@ export const Hero = () => {
             Premium Properties
           </span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold mb-6 max-w-5xl mx-auto leading-tight">
-            Discover Your Perfect Place to Live
+            Your Perfect Home Awaits in Nigeria
           </h1>
           <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto mb-8">
-            Exclusive properties in the most sought-after locations. Experience luxury living with our curated real estate collection.
+            Discover luxury homes, apartments and investment properties in Lagos and across Nigeria with Zain Homes.
           </p>
         </div>
 
@@ -36,7 +36,7 @@ export const Hero = () => {
                 <Search className="mr-2 text-estate-400" size={20} />
                 <input
                   type="text"
-                  placeholder="Search for properties..."
+                  placeholder="Search for properties in Lagos, Abuja..."
                   className="w-full border-none focus:outline-none text-estate-800 text-lg placeholder-estate-400"
                 />
               </div>
@@ -52,7 +52,7 @@ export const Hero = () => {
             <div className="p-4 text-left border-r border-estate-100">
               <label className="block text-xs text-estate-500 mb-1">Location</label>
               <div className="flex items-center justify-between">
-                <span className="text-estate-800 font-medium">Any Location</span>
+                <span className="text-estate-800 font-medium">Lagos</span>
                 <ChevronDown size={16} className="text-estate-400" />
               </div>
             </div>

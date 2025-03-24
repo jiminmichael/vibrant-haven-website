@@ -2,6 +2,7 @@
 import React from "react";
 import { MapPin, BedDouble, Bath, Square } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
 type PropertyCardProps = {
   image: string;
@@ -14,6 +15,7 @@ type PropertyCardProps = {
   featured?: boolean;
   className?: string;
   style?: React.CSSProperties;
+  id?: string | number;
 };
 
 export const PropertyCard = ({
@@ -27,11 +29,13 @@ export const PropertyCard = ({
   featured = false,
   className,
   style,
+  id = "property-detail",
 }: PropertyCardProps) => {
   return (
-    <div 
+    <Link 
+      to={`/property/${id}`}
       className={cn(
-        "rounded-xl overflow-hidden group transition-all duration-300 hover:shadow-xl",
+        "block rounded-xl overflow-hidden group transition-all duration-300 hover:shadow-xl",
         featured ? "border-2 border-accent-500" : "border border-estate-200",
         className
       )}
@@ -77,6 +81,6 @@ export const PropertyCard = ({
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
