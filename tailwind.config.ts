@@ -41,18 +41,6 @@ export default {
 					800: '#323f4b',
 					900: '#1f2933',
 				},
-				accent: {
-					50: '#e3f8ff',
-					100: '#b3ecff',
-					200: '#81defd',
-					300: '#5ed0fa',
-					400: '#40c3f7',
-					500: '#2bb0ed',
-					600: '#1992d4',
-					700: '#127fbf',
-					800: '#0b69a3',
-					900: '#035388',
-				},
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
@@ -69,9 +57,20 @@ export default {
 					DEFAULT: 'hsl(var(--muted))',
 					foreground: 'hsl(var(--muted-foreground))'
 				},
+				// Define 'accent' only once, preserving the numeric scale for utility classes
 				accent: {
 					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
+					foreground: 'hsl(var(--accent-foreground))',
+					50: '#e3f8ff',
+					100: '#b3ecff',
+					200: '#81defd',
+					300: '#5ed0fa',
+					400: '#40c3f7',
+					500: '#2bb0ed',
+					600: '#1992d4',
+					700: '#127fbf',
+					800: '#0b69a3',
+					900: '#035388',
 				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
