@@ -13,6 +13,7 @@ type PropertyCardProps = {
   area: string;
   featured?: boolean;
   className?: string;
+  style?: React.CSSProperties;
 };
 
 export const PropertyCard = ({
@@ -25,6 +26,7 @@ export const PropertyCard = ({
   area,
   featured = false,
   className,
+  style,
 }: PropertyCardProps) => {
   return (
     <div 
@@ -33,6 +35,7 @@ export const PropertyCard = ({
         featured ? "border-2 border-accent-500" : "border border-estate-200",
         className
       )}
+      style={style}
     >
       <div className="relative overflow-hidden h-64">
         <img
@@ -41,7 +44,7 @@ export const PropertyCard = ({
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
         {featured && (
-          <div className="absolute top-4 right-4 bg-accent-600 text-white text-xs font-semibold px-2 py-1 rounded">
+          <div className="absolute top-4 right-4 bg-accent-500 text-white text-xs font-semibold px-2 py-1 rounded">
             Featured
           </div>
         )}
@@ -51,7 +54,7 @@ export const PropertyCard = ({
       <div className="p-6">
         <div className="flex justify-between items-start mb-2">
           <h3 className="text-xl font-serif font-medium text-estate-900 line-clamp-1">{title}</h3>
-          <p className="text-accent-600 font-semibold">{price}</p>
+          <p className="text-accent-500 font-semibold">{price}</p>
         </div>
         
         <div className="flex items-center mb-4 text-estate-600">

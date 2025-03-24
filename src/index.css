@@ -118,7 +118,7 @@
   }
   
   .link-underline:after {
-    @apply content-[''] bg-accent-600 h-[2px] w-[0%] left-0 -bottom-[5px] rounded-xl absolute duration-300;
+    @apply content-[''] bg-accent-500 h-[2px] w-[0%] left-0 -bottom-[5px] rounded-xl absolute duration-300;
   }
   
   .link-underline:hover:after {

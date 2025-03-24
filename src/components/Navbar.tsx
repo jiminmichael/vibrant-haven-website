@@ -49,7 +49,7 @@ export const Navbar = () => {
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <a href="#" className="text-estate-900 font-serif text-2xl font-bold">
-              ESTATE<span className="text-accent-600">.</span>
+              ESTATE<span className="text-accent-500">.</span>
             </a>
           </div>
 
@@ -68,7 +68,7 @@ export const Navbar = () => {
 
           <div className="hidden md:flex items-center">
             <div className="mr-6 flex items-center text-estate-700">
-              <Phone size={16} className="mr-2 text-accent-600" />
+              <Phone size={16} className="mr-2 text-accent-500" />
               <span className="text-sm font-medium">+1 (555) 123-4567</span>
             </div>
             <Button>Schedule a Viewing</Button>
@@ -111,7 +111,7 @@ export const Navbar = () => {
           ))}
           <div className="pt-4">
             <div className="flex items-center py-3 text-estate-700">
-              <Phone size={16} className="mr-2 text-accent-600" />
+              <Phone size={16} className="mr-2 text-accent-500" />
               <span className="text-base font-medium">+1 (555) 123-4567</span>
             </div>
             <Button fullWidth className="mt-3">

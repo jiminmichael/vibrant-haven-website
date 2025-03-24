@@ -18,7 +18,7 @@ export const Hero = () => {
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
         <div className="animate-fade-in">
-          <span className="inline-block bg-accent-600 text-white text-sm font-medium px-3 py-1 rounded-full mb-6">
+          <span className="inline-block bg-accent-500 text-white text-sm font-medium px-3 py-1 rounded-full mb-6">
             Premium Properties
           </span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold mb-6 max-w-5xl mx-auto leading-tight">
