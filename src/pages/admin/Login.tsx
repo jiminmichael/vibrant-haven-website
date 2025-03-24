@@ -1,106 +1,82 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui-components/Button";
-import { Lock } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 
 const AdminLogin = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simple demo authentication
-    // In a real application, this would call an API endpoint
-    setTimeout(() => {
-      if (username === "admin" && password === "password") {
-        // Set admin session in localStorage (use a more secure method in production)
-        localStorage.setItem("isAdminLoggedIn", "true");
-        toast({
-          title: "Login successful",
-          description: "Welcome to the admin dashboard",
-        });
-        navigate("/admin");
-      } else {
-        toast({
-          title: "Login failed",
-          description: "Invalid username or password",
-          variant: "destructive",
-        });
-      }
-      setIsLoading(false);
-    }, 1000);
+    // Simulate authentication logic (replace with actual authentication)
+    if (email === "admin@example.com" && password === "password") {
+      localStorage.setItem("isAdminLoggedIn", "true");
+      toast({
+        title: "Login Successful",
+        description: "You have successfully logged in as admin.",
+      });
+      navigate("/admin");
+    } else {
+      toast({
+        title: "Login Failed",
+        description: "Invalid credentials. Please try again.",
+        variant: "destructive",
+      });
+    }
+
+    setIsLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30">
-      <div className="w-full max-w-md p-8 space-y-8 bg-card rounded-lg shadow-lg border border-border">
-        <div className="text-center">
-          <div className="mx-auto h-14 w-14 flex items-center justify-center rounded-full bg-primary-foreground">
-            <Lock className="h-7 w-7 text-primary" />
-          </div>
-          <h2 className="mt-6 text-3xl font-serif font-bold">Admin Login</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Please sign in to access the admin area
-          </p>
-        </div>
-        
-        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="username" className="block text-sm font-medium mb-1">
-                Username
-              </label>
+    <div className="h-screen flex items-center justify-center bg-gray-100">
+      <Card className="w-full max-w-md">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl">Admin Login</CardTitle>
+          <CardDescription>Enter your email and password to login</CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <form onSubmit={handleSubmit}>
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
               <Input
-                id="username"
-                name="username"
-                type="text"
+                id="email"
+                type="email"
+                placeholder="admin@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter your username"
               />
             </div>
-            
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-1">
-                Password
-              </label>
+            <div className="grid gap-2">
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
-                name="password"
                 type="password"
-                required
+                placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
+                required
               />
             </div>
-          </div>
-
-          <Button 
-            fullWidth 
-            type="submit" 
-            isLoading={isLoading}
-            loadingText="Signing in..."
-          >
-            Sign in
-          </Button>
-          
-          <div className="text-center mt-4">
-            <p className="text-sm text-muted-foreground">
-              Demo credentials: admin / password
-            </p>
-          </div>
-        </form>
-      </div>
+            <Button 
+              type="submit" 
+              fullWidth 
+              disabled={isLoading}
+            >
+              {isLoading ? "Logging in..." : "Login"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 };

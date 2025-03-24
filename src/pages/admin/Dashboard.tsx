@@ -1,8 +1,7 @@
-
 import React from "react";
 import { AdminLayout } from "@/components/AdminLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Buildings, Users, FileText, ArrowUpRight } from "lucide-react";
+import { Building, Users, FileText, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const AdminDashboard = () => {
@@ -16,7 +15,7 @@ const AdminDashboard = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <CardTitle className="text-lg font-medium">Properties</CardTitle>
-              <Buildings className="w-5 h-5 text-muted-foreground" />
+              <Building className="w-5 h-5 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold">6</div>
@@ -75,7 +74,7 @@ const AdminDashboard = () => {
               <div className="space-y-4">
                 <div className="flex items-center gap-4 pb-4 border-b">
                   <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                    <Buildings size={18} />
+                    <Building size={18} />
                   </div>
                   <div>
                     <p className="font-medium">Property Added</p>

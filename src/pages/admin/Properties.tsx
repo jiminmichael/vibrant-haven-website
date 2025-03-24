@@ -1,476 +1,257 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AdminLayout } from "@/components/AdminLayout";
-import { Button } from "@/components/ui-components/Button";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Plus, Pencil, Trash } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { toast } from "@/components/ui/use-toast";
 
-// Define the property interface
 interface Property {
-  id: number;
-  title: string;
+  id: string;
+  name: string;
   location: string;
-  price: string;
-  beds: number;
-  baths: number;
-  area: string;
-  featured: boolean;
-  type: string;
-  description: string;
-  image: string;
+  price: number;
+  status: "active" | "inactive";
 }
 
 const AdminProperties = () => {
-  // Sample properties data
   const [properties, setProperties] = useState<Property[]>([
-    {
-      id: 1,
-      image: "https://zainhomes.com.ng/wp-content/uploads/2021/10/pexels-expect-best-323780-scaled.jpg",
-      title: "Luxury Villa in Lekki Phase 1",
-      location: "Lekki Phase 1, Lagos",
-      price: "₦150,000,000",
-      beds: 5,
-      baths: 4,
-      area: "450 sq m",
-      featured: true,
-      type: "sale",
-      description: "This exquisite villa in Lekki Phase 1 offers luxurious living spaces."
-    },
-    {
-      id: 2,
-      image: "https://zainhomes.com.ng/wp-content/uploads/2020/07/estate-1-1.jpg",
-      title: "Modern Apartment in Victoria Island",
-      location: "Victoria Island, Lagos",
-      price: "₦85,000,000",
-      beds: 3,
-      baths: 3,
-      area: "210 sq m",
-      featured: false,
-      type: "sale",
-      description: "A beautiful modern apartment in the heart of Victoria Island."
-    },
-    {
-      id: 3,
-      image: "https://zainhomes.com.ng/wp-content/uploads/2020/07/estate-1-2.jpg",
-      title: "Family Home in Ikoyi",
-      location: "Ikoyi, Lagos",
-      price: "₦220,000,000",
-      beds: 6,
-      baths: 5,
-      area: "580 sq m",
-      featured: false,
-      type: "sale",
-      description: "A spacious family home in a prime location in Ikoyi."
-    }
+    { id: "1", name: "Luxury Villa", location: "Lekki", price: 500000, status: "active" },
+    { id: "2", name: "Apartment Suite", location: "Ikeja", price: 250000, status: "inactive" },
   ]);
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
 
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [currentProperty, setCurrentProperty] = useState<Property | null>(null);
-  const [newProperty, setNewProperty] = useState<Partial<Property>>({
-    title: "",
-    location: "",
-    price: "",
-    beds: 0,
-    baths: 0,
-    area: "",
-    featured: false,
-    type: "sale",
-    description: "",
-    image: ""
-  });
+  const [newPropertyName, setNewPropertyName] = useState("");
+  const [newPropertyLocation, setNewPropertyLocation] = useState("");
+  const [newPropertyPrice, setNewPropertyPrice] = useState(0);
 
-  // Create a new property
+  const handleOpenCreateDialog = () => {
+    setOpenCreateDialog(true);
+  };
+
+  const handleCloseCreateDialog = () => {
+    setOpenCreateDialog(false);
+    setNewPropertyName("");
+    setNewPropertyLocation("");
+    setNewPropertyPrice(0);
+  };
+
   const handleCreateProperty = () => {
-    const id = properties.length > 0 ? Math.max(...properties.map(p => p.id)) + 1 : 1;
-    setProperties([...properties, { id, ...newProperty as Property }]);
-    setNewProperty({
-      title: "",
-      location: "",
-      price: "",
-      beds: 0,
-      baths: 0,
-      area: "",
-      featured: false,
-      type: "sale",
-      description: "",
-      image: ""
+    const newProperty: Property = {
+      id: String(Date.now()),
+      name: newPropertyName,
+      location: newPropertyLocation,
+      price: newPropertyPrice,
+      status: "active",
+    };
+
+    setProperties([...properties, newProperty]);
+    handleCloseCreateDialog();
+    toast({
+      title: "Success",
+      description: "Property created successfully.",
     });
-    setIsAddDialogOpen(false);
   };
 
-  // Edit property
-  const handleEditProperty = () => {
-    if (currentProperty) {
-      setProperties(properties.map(p => 
-        p.id === currentProperty.id ? currentProperty : p
-      ));
-      setCurrentProperty(null);
-      setIsEditDialogOpen(false);
-    }
+  const handleOpenEditDialog = (id: string) => {
+    setSelectedPropertyId(id);
+    setOpenEditDialog(true);
   };
 
-  // Delete property
+  const handleCloseEditDialog = () => {
+    setOpenEditDialog(false);
+    setSelectedPropertyId(null);
+  };
+
+  const handleOpenDeleteDialog = (id: string) => {
+    setSelectedPropertyId(id);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+    setSelectedPropertyId(null);
+  };
+
   const handleDeleteProperty = () => {
-    if (currentProperty) {
-      setProperties(properties.filter(p => p.id !== currentProperty.id));
-      setCurrentProperty(null);
-      setIsDeleteDialogOpen(false);
+    if (selectedPropertyId) {
+      setProperties(properties.filter((property) => property.id !== selectedPropertyId));
+      handleCloseDeleteDialog();
+      toast({
+        title: "Success",
+        description: "Property deleted successfully.",
+      });
     }
   };
 
   return (
     <AdminLayout>
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-serif font-semibold">Properties</h1>
-            <p className="text-muted-foreground">Manage your real estate listings</p>
-          </div>
-          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-            <DialogTrigger asChild>
-              <Button icon={<Plus size={16} />}>Add Property</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[625px]">
-              <DialogHeader>
-                <DialogTitle>Add New Property</DialogTitle>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="title">Property Title</Label>
-                    <Input 
-                      id="title" 
-                      value={newProperty.title} 
-                      onChange={(e) => setNewProperty({...newProperty, title: e.target.value})}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="location">Location</Label>
-                    <Input 
-                      id="location" 
-                      value={newProperty.location} 
-                      onChange={(e) => setNewProperty({...newProperty, location: e.target.value})}
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="price">Price</Label>
-                    <Input 
-                      id="price" 
-                      value={newProperty.price} 
-                      onChange={(e) => setNewProperty({...newProperty, price: e.target.value})}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="type">Property Type</Label>
-                    <select 
-                      id="type"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                      value={newProperty.type}
-                      onChange={(e) => setNewProperty({...newProperty, type: e.target.value})}
-                    >
-                      <option value="sale">For Sale</option>
-                      <option value="rent">For Rent</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="beds">Bedrooms</Label>
-                    <Input 
-                      id="beds" 
-                      type="number"
-                      value={newProperty.beds?.toString()} 
-                      onChange={(e) => setNewProperty({...newProperty, beds: parseInt(e.target.value) || 0})}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="baths">Bathrooms</Label>
-                    <Input 
-                      id="baths" 
-                      type="number"
-                      value={newProperty.baths?.toString()} 
-                      onChange={(e) => setNewProperty({...newProperty, baths: parseInt(e.target.value) || 0})}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="area">Area</Label>
-                    <Input 
-                      id="area" 
-                      value={newProperty.area} 
-                      onChange={(e) => setNewProperty({...newProperty, area: e.target.value})}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="image">Image URL</Label>
-                  <Input 
-                    id="image" 
-                    value={newProperty.image} 
-                    onChange={(e) => setNewProperty({...newProperty, image: e.target.value})}
-                  />
-                  <p className="text-xs text-muted-foreground">Enter a URL for the property image</p>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea 
-                    id="description" 
-                    rows={3}
-                    value={newProperty.description} 
-                    onChange={(e) => setNewProperty({...newProperty, description: e.target.value})}
-                  />
-                </div>
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="featured"
-                    checked={newProperty.featured}
-                    onChange={(e) => setNewProperty({...newProperty, featured: e.target.checked})}
-                    className="h-4 w-4 rounded border-gray-300"
-                  />
-                  <Label htmlFor="featured">Featured Property</Label>
-                </div>
-              </div>
-              <div className="flex justify-end space-x-2">
-                <Button 
-                  variant="outline"
-                  onClick={() => setIsAddDialogOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button onClick={handleCreateProperty}>Create Property</Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-serif font-semibold">Properties</h1>
+          <Button onClick={handleOpenCreateDialog}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Property
+          </Button>
         </div>
-        
-        <div className="flex justify-between pb-4">
-          <div className="relative w-64">
-            <Search className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
-            <Input className="pl-8" placeholder="Search properties..." />
-          </div>
-          <div className="space-x-2">
-            <select className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm">
-              <option value="all">All Properties</option>
-              <option value="sale">For Sale</option>
-              <option value="rent">For Rent</option>
-            </select>
-          </div>
-        </div>
-        
-        <div className="rounded-md border">
-          <table className="min-w-full divide-y divide-border">
-            <thead>
-              <tr className="bg-muted/50">
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Property</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Location</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Price</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Details</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-border">
-              {properties.map((property) => (
-                <tr key={property.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="h-10 w-10 flex-shrink-0 rounded-md overflow-hidden">
-                        <img className="h-10 w-10 object-cover" src={property.image} alt={property.title} />
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">{property.title}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{property.location}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{property.price}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {property.beds} beds, {property.baths} baths, {property.area}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${property.featured ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-                      {property.featured ? 'Featured' : 'Standard'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div className="flex justify-end space-x-2">
-                      <button 
-                        className="text-blue-600 hover:text-blue-900"
-                        onClick={() => {
-                          setCurrentProperty(property);
-                          setIsEditDialogOpen(true);
-                        }}
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Property List</CardTitle>
+            <CardDescription>Manage your properties</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Location</TableHead>
+                  <TableHead>Price</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {properties.map((property) => (
+                  <TableRow key={property.id}>
+                    <TableCell>{property.name}</TableCell>
+                    <TableCell>{property.location}</TableCell>
+                    <TableCell>${property.price}</TableCell>
+                    <TableCell>{property.status}</TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="ghost" size="sm" onClick={() => handleOpenEditDialog(property.id)}>
+                        <Pencil className="mr-2 h-4 w-4" />
+                        Edit
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="text-red-500 hover:bg-red-50"
+                        onClick={() => handleOpenDeleteDialog(property.id)}
                       >
-                        <Pencil size={16} />
-                      </button>
-                      <button 
-                        className="text-red-600 hover:text-red-900"
-                        onClick={() => {
-                          setCurrentProperty(property);
-                          setIsDeleteDialogOpen(true);
-                        }}
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      
-      {/* Edit Property Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[625px]">
-          <DialogHeader>
-            <DialogTitle>Edit Property</DialogTitle>
-          </DialogHeader>
-          {currentProperty && (
+                        Delete
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+
+        {/* Create Property Dialog */}
+        <Dialog open={openCreateDialog} onOpenChange={setOpenCreateDialog}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Add New Property</DialogTitle>
+              <DialogDescription>Create a new property listing.</DialogDescription>
+            </DialogHeader>
             <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-title">Property Title</Label>
-                  <Input 
-                    id="edit-title" 
-                    value={currentProperty.title} 
-                    onChange={(e) => setCurrentProperty({...currentProperty, title: e.target.value})}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-location">Location</Label>
-                  <Input 
-                    id="edit-location" 
-                    value={currentProperty.location} 
-                    onChange={(e) => setCurrentProperty({...currentProperty, location: e.target.value})}
-                  />
-                </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
+                  Name
+                </Label>
+                <Input id="name" value={newPropertyName} onChange={(e) => setNewPropertyName(e.target.value)} className="col-span-3" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-price">Price</Label>
-                  <Input 
-                    id="edit-price" 
-                    value={currentProperty.price} 
-                    onChange={(e) => setCurrentProperty({...currentProperty, price: e.target.value})}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-type">Property Type</Label>
-                  <select 
-                    id="edit-type"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                    value={currentProperty.type}
-                    onChange={(e) => setCurrentProperty({...currentProperty, type: e.target.value})}
-                  >
-                    <option value="sale">For Sale</option>
-                    <option value="rent">For Rent</option>
-                  </select>
-                </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="location" className="text-right">
+                  Location
+                </Label>
+                <Input id="location" value={newPropertyLocation} onChange={(e) => setNewPropertyLocation(e.target.value)} className="col-span-3" />
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-beds">Bedrooms</Label>
-                  <Input 
-                    id="edit-beds" 
-                    type="number"
-                    value={currentProperty.beds.toString()} 
-                    onChange={(e) => setCurrentProperty({...currentProperty, beds: parseInt(e.target.value) || 0})}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-baths">Bathrooms</Label>
-                  <Input 
-                    id="edit-baths" 
-                    type="number"
-                    value={currentProperty.baths.toString()} 
-                    onChange={(e) => setCurrentProperty({...currentProperty, baths: parseInt(e.target.value) || 0})}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-area">Area</Label>
-                  <Input 
-                    id="edit-area" 
-                    value={currentProperty.area} 
-                    onChange={(e) => setCurrentProperty({...currentProperty, area: e.target.value})}
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-image">Image URL</Label>
-                <Input 
-                  id="edit-image" 
-                  value={currentProperty.image} 
-                  onChange={(e) => setCurrentProperty({...currentProperty, image: e.target.value})}
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="price" className="text-right">
+                  Price
+                </Label>
+                <Input
+                  type="number"
+                  id="price"
+                  value={newPropertyPrice}
+                  onChange={(e) => setNewPropertyPrice(Number(e.target.value))}
+                  className="col-span-3"
                 />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-description">Description</Label>
-                <Textarea 
-                  id="edit-description" 
-                  rows={3}
-                  value={currentProperty.description} 
-                  onChange={(e) => setCurrentProperty({...currentProperty, description: e.target.value})}
-                />
-              </div>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="edit-featured"
-                  checked={currentProperty.featured}
-                  onChange={(e) => setCurrentProperty({...currentProperty, featured: e.target.checked})}
-                  className="h-4 w-4 rounded border-gray-300"
-                />
-                <Label htmlFor="edit-featured">Featured Property</Label>
               </div>
             </div>
-          )}
-          <div className="flex justify-end space-x-2">
-            <Button 
-              variant="outline"
-              onClick={() => setIsEditDialogOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button onClick={handleEditProperty}>Save Changes</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-      
-      {/* Delete Confirmation Dialog */}
-      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
-          </DialogHeader>
-          <div className="py-4">
-            <p>Are you sure you want to delete this property? This action cannot be undone.</p>
-            {currentProperty && (
-              <div className="mt-2 p-4 bg-muted rounded-md">
-                <p className="font-medium">{currentProperty.title}</p>
-                <p className="text-sm text-muted-foreground">{currentProperty.location}</p>
+            <DialogFooter>
+              <Button type="submit" onClick={handleCreateProperty}>
+                Create
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Edit Property Dialog */}
+        <Dialog open={openEditDialog} onOpenChange={setOpenEditDialog}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Edit Property</DialogTitle>
+              <DialogDescription>Make changes to your property listing.</DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
+                  Name
+                </Label>
+                <Input id="name" defaultValue="Luxury Villa" className="col-span-3" />
               </div>
-            )}
-          </div>
-          <div className="flex justify-end space-x-2">
-            <Button 
-              variant="outline"
-              onClick={() => setIsDeleteDialogOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={handleDeleteProperty}>Delete Property</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="location" className="text-right">
+                  Location
+                </Label>
+                <Input id="location" defaultValue="Lekki" className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="price" className="text-right">
+                  Price
+                </Label>
+                <Input type="number" id="price" defaultValue="500000" className="col-span-3" />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type="submit">Save changes</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Delete Property Dialog */}
+        <Dialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Delete Property</DialogTitle>
+              <DialogDescription>Are you sure you want to delete this property? This action cannot be undone.</DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant="secondary">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button
+                variant="outline"
+                className="text-red-500 hover:bg-red-50"
+                onClick={handleDeleteProperty}
+              >
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
     </AdminLayout>
   );
 };

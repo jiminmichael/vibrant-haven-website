@@ -1,7 +1,6 @@
-
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { HomeIcon, Buildings, FileText, Phone, Settings, LogOut } from "lucide-react";
+import { HomeIcon, Building, FileText, Phone, Settings, LogOut } from "lucide-react";
 
 export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
@@ -34,7 +33,7 @@ export const AdminLayout = ({ children }: { children: React.ReactNode }) => {
                 to="/admin/properties" 
                 className={`flex items-center gap-2 px-4 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors ${isActive('/admin/properties')}`}
               >
-                <Buildings size={18} />
+                <Building size={18} />
                 <span>Properties</span>
               </Link>
             </li>
