@@ -15,6 +15,8 @@ import NotFound from "./pages/NotFound";
 // Admin Pages
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminProperties from "./pages/admin/Properties";
+import AdminServices from "./pages/admin/Services";
+import AdminContactInfo from "./pages/admin/ContactInfo";
 import AdminLogin from "./pages/admin/Login";
 import { AdminAuthGuard } from "./components/AdminAuthGuard";
 
@@ -39,6 +41,8 @@ const App = () => (
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminAuthGuard><AdminDashboard /></AdminAuthGuard>} />
           <Route path="/admin/properties" element={<AdminAuthGuard><AdminProperties /></AdminAuthGuard>} />
+          <Route path="/admin/services" element={<AdminAuthGuard><AdminServices /></AdminAuthGuard>} />
+          <Route path="/admin/contact" element={<AdminAuthGuard><AdminContactInfo /></AdminAuthGuard>} />
           
           {/* Catch-all Route */}
           <Route path="*" element={<NotFound />} />

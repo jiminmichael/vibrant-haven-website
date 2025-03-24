@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect } from "react";
 import { AdminLayout } from "@/components/AdminLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Pencil, Trash } from "lucide-react";
+import { Plus, Pencil, Trash, Image as ImageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,12 +26,32 @@ interface Property {
   location: string;
   price: number;
   status: "active" | "inactive";
+  images: string[];
 }
 
 const AdminProperties = () => {
   const [properties, setProperties] = useState<Property[]>([
-    { id: "1", name: "Luxury Villa", location: "Lekki", price: 500000, status: "active" },
-    { id: "2", name: "Apartment Suite", location: "Ikeja", price: 250000, status: "inactive" },
+    { 
+      id: "1", 
+      name: "Luxury Villa", 
+      location: "Lekki", 
+      price: 500000, 
+      status: "active",
+      images: [
+        "https://zainhomes.com.ng/wp-content/uploads/2021/10/pexels-expect-best-323780-scaled.jpg",
+        "https://zainhomes.com.ng/wp-content/uploads/2020/07/estate-1-1.jpg",
+      ]
+    },
+    { 
+      id: "2", 
+      name: "Apartment Suite", 
+      location: "Ikeja", 
+      price: 250000, 
+      status: "inactive",
+      images: [
+        "https://zainhomes.com.ng/wp-content/uploads/2020/07/estate-1-2.jpg"
+      ]
+    },
   ]);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -40,6 +61,23 @@ const AdminProperties = () => {
   const [newPropertyName, setNewPropertyName] = useState("");
   const [newPropertyLocation, setNewPropertyLocation] = useState("");
   const [newPropertyPrice, setNewPropertyPrice] = useState(0);
+  const [newPropertyImages, setNewPropertyImages] = useState<string[]>([""]);
+
+  const addImageField = () => {
+    setNewPropertyImages([...newPropertyImages, ""]);
+  };
+
+  const removeImageField = (index: number) => {
+    const updatedImages = [...newPropertyImages];
+    updatedImages.splice(index, 1);
+    setNewPropertyImages(updatedImages);
+  };
+
+  const handleImageChange = (index: number, value: string) => {
+    const updatedImages = [...newPropertyImages];
+    updatedImages[index] = value;
+    setNewPropertyImages(updatedImages);
+  };
 
   const handleOpenCreateDialog = () => {
     setOpenCreateDialog(true);
@@ -50,15 +88,20 @@ const AdminProperties = () => {
     setNewPropertyName("");
     setNewPropertyLocation("");
     setNewPropertyPrice(0);
+    setNewPropertyImages([""]);
   };
 
   const handleCreateProperty = () => {
+    // Filter out empty image URLs
+    const filteredImages = newPropertyImages.filter(img => img.trim() !== "");
+    
     const newProperty: Property = {
       id: String(Date.now()),
       name: newPropertyName,
       location: newPropertyLocation,
       price: newPropertyPrice,
       status: "active",
+      images: filteredImages.length > 0 ? filteredImages : ["https://zainhomes.com.ng/wp-content/uploads/2021/10/pexels-expect-best-323780-scaled.jpg"], // Default image if none provided
     };
 
     setProperties([...properties, newProperty]);
@@ -71,12 +114,51 @@ const AdminProperties = () => {
 
   const handleOpenEditDialog = (id: string) => {
     setSelectedPropertyId(id);
+    
+    // Find the property to edit
+    const propertyToEdit = properties.find(prop => prop.id === id);
+    if (propertyToEdit) {
+      setNewPropertyName(propertyToEdit.name);
+      setNewPropertyLocation(propertyToEdit.location);
+      setNewPropertyPrice(propertyToEdit.price);
+      setNewPropertyImages(propertyToEdit.images.length > 0 ? [...propertyToEdit.images] : [""]);
+    }
+    
     setOpenEditDialog(true);
   };
 
   const handleCloseEditDialog = () => {
     setOpenEditDialog(false);
     setSelectedPropertyId(null);
+    setNewPropertyName("");
+    setNewPropertyLocation("");
+    setNewPropertyPrice(0);
+    setNewPropertyImages([""]);
+  };
+
+  const handleEditProperty = () => {
+    if (selectedPropertyId) {
+      // Filter out empty image URLs
+      const filteredImages = newPropertyImages.filter(img => img.trim() !== "");
+      
+      setProperties(properties.map(property => 
+        property.id === selectedPropertyId 
+          ? {
+              ...property,
+              name: newPropertyName,
+              location: newPropertyLocation,
+              price: newPropertyPrice,
+              images: filteredImages.length > 0 ? filteredImages : property.images,
+            }
+          : property
+      ));
+      
+      handleCloseEditDialog();
+      toast({
+        title: "Success",
+        description: "Property updated successfully.",
+      });
+    }
   };
 
   const handleOpenDeleteDialog = (id: string) => {
@@ -124,6 +206,7 @@ const AdminProperties = () => {
                   <TableHead>Location</TableHead>
                   <TableHead>Price</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Images</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -134,6 +217,20 @@ const AdminProperties = () => {
                     <TableCell>{property.location}</TableCell>
                     <TableCell>${property.price}</TableCell>
                     <TableCell>{property.status}</TableCell>
+                    <TableCell>
+                      <div className="flex space-x-1">
+                        {property.images.slice(0, 3).map((image, index) => (
+                          <div key={index} className="h-8 w-8 rounded overflow-hidden bg-slate-100">
+                            <img src={image} alt={`${property.name} image ${index + 1}`} className="h-full w-full object-cover" />
+                          </div>
+                        ))}
+                        {property.images.length > 3 && (
+                          <div className="h-8 w-8 rounded bg-slate-100 flex items-center justify-center text-xs">
+                            +{property.images.length - 3}
+                          </div>
+                        )}
+                      </div>
+                    </TableCell>
                     <TableCell className="text-right">
                       <Button variant="ghost" size="sm" onClick={() => handleOpenEditDialog(property.id)}>
                         <Pencil className="mr-2 h-4 w-4" />
@@ -156,7 +253,7 @@ const AdminProperties = () => {
 
         {/* Create Property Dialog */}
         <Dialog open={openCreateDialog} onOpenChange={setOpenCreateDialog}>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
               <DialogTitle>Add New Property</DialogTitle>
               <DialogDescription>Create a new property listing.</DialogDescription>
@@ -186,6 +283,44 @@ const AdminProperties = () => {
                   className="col-span-3"
                 />
               </div>
+              
+              <div className="grid grid-cols-4 items-start gap-4">
+                <Label className="text-right pt-2">
+                  Images
+                </Label>
+                <div className="col-span-3 space-y-2">
+                  {newPropertyImages.map((image, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <Input
+                        placeholder="Image URL"
+                        value={image}
+                        onChange={(e) => handleImageChange(index, e.target.value)}
+                        className="flex-1"
+                      />
+                      {index > 0 && (
+                        <Button 
+                          variant="outline" 
+                          onClick={() => removeImageField(index)}
+                          size="sm"
+                          className="text-red-500 hover:bg-red-50"
+                        >
+                          <Trash size={16} />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={addImageField}
+                    size="sm"
+                    className="text-blue-500"
+                  >
+                    <Plus size={16} className="mr-1" />
+                    Add Image
+                  </Button>
+                </div>
+              </div>
             </div>
             <DialogFooter>
               <Button type="submit" onClick={handleCreateProperty}>
@@ -197,33 +332,79 @@ const AdminProperties = () => {
 
         {/* Edit Property Dialog */}
         <Dialog open={openEditDialog} onOpenChange={setOpenEditDialog}>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
               <DialogTitle>Edit Property</DialogTitle>
               <DialogDescription>Make changes to your property listing.</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
+                <Label htmlFor="edit-name" className="text-right">
                   Name
                 </Label>
-                <Input id="name" defaultValue="Luxury Villa" className="col-span-3" />
+                <Input id="edit-name" value={newPropertyName} onChange={(e) => setNewPropertyName(e.target.value)} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="location" className="text-right">
+                <Label htmlFor="edit-location" className="text-right">
                   Location
                 </Label>
-                <Input id="location" defaultValue="Lekki" className="col-span-3" />
+                <Input id="edit-location" value={newPropertyLocation} onChange={(e) => setNewPropertyLocation(e.target.value)} className="col-span-3" />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="price" className="text-right">
+                <Label htmlFor="edit-price" className="text-right">
                   Price
                 </Label>
-                <Input type="number" id="price" defaultValue="500000" className="col-span-3" />
+                <Input
+                  type="number"
+                  id="edit-price"
+                  value={newPropertyPrice}
+                  onChange={(e) => setNewPropertyPrice(Number(e.target.value))}
+                  className="col-span-3"
+                />
+              </div>
+              
+              <div className="grid grid-cols-4 items-start gap-4">
+                <Label className="text-right pt-2">
+                  Images
+                </Label>
+                <div className="col-span-3 space-y-2">
+                  {newPropertyImages.map((image, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <Input
+                        placeholder="Image URL"
+                        value={image}
+                        onChange={(e) => handleImageChange(index, e.target.value)}
+                        className="flex-1"
+                      />
+                      {index > 0 && (
+                        <Button 
+                          variant="outline" 
+                          onClick={() => removeImageField(index)}
+                          size="sm"
+                          className="text-red-500 hover:bg-red-50"
+                        >
+                          <Trash size={16} />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={addImageField}
+                    size="sm"
+                    className="text-blue-500"
+                  >
+                    <Plus size={16} className="mr-1" />
+                    Add Image
+                  </Button>
+                </div>
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit" onClick={handleEditProperty}>
+                Save changes
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
