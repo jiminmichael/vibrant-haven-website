@@ -9,7 +9,7 @@ export const Hero = () => {
       {/* Background image */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://zainhomes.com.ng/wp-content/uploads/2020/07/home-page-slider-bg-4.jpg"
+          src="http://zainhomes.com.ng/Booking/wp-content/uploads/2024/01/cropped-IMG-20240106-WA0007_2_prev_ui.png"
           alt="Luxury building"
           className="w-full h-full object-cover"
         />
