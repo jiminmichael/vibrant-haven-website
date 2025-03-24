@@ -15,13 +15,13 @@ export const Footer = () => {
               Premium real estate services for discerning clients seeking exceptional properties and personalized attention.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-estate-400 hover:text-white transition-colors duration-300">
+              <a href="https://facebook.com/zainhomesnigerialimited" className="text-estate-400 hover:text-white transition-colors duration-300">
                 <Facebook size={20} />
               </a>
               <a href="#" className="text-estate-400 hover:text-white transition-colors duration-300">
                 <Twitter size={20} />
               </a>
-              <a href="#" className="text-estate-400 hover:text-white transition-colors duration-300">
+              <a href="https://www.instagram.com/zain_home_ng/" className="text-estate-400 hover:text-white transition-colors duration-300">
                 <Instagram size={20} />
               </a>
               <a href="#" className="text-estate-400 hover:text-white transition-colors duration-300">
