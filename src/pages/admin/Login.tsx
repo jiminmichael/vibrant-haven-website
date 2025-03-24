@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -69,7 +70,7 @@ const AdminLogin = () => {
             </div>
             <Button 
               type="submit" 
-              fullWidth 
+              className="w-full mt-4" 
               disabled={isLoading}
             >
               {isLoading ? "Logging in..." : "Login"}
