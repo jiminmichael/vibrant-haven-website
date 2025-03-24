@@ -80,7 +80,7 @@ export const Navbar = () => {
           <div className="hidden md:flex items-center">
             <div className="mr-6 flex items-center text-estate-700">
               <Phone size={16} className="mr-2 text-accent-500" />
-              <span className="text-sm font-medium">+234 700 700 7000</span>
+              <span className="text-sm font-medium">+2349039045094</span>
             </div>
             <Button>Schedule a Viewing</Button>
           </div>
@@ -126,7 +126,7 @@ export const Navbar = () => {
           <div className="pt-4">
             <div className="flex items-center py-3 text-estate-700">
               <Phone size={16} className="mr-2 text-accent-500" />
-              <span className="text-base font-medium">+234 700 700 7000</span>
+              <span className="text-base font-medium">+234 903 904 5094</span>
             </div>
             <Button fullWidth className="mt-3">
               Schedule a Viewing
